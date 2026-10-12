@@ -24,7 +24,7 @@ async function fresh(viewport) {
   await page.goto(URL + "?debug=1", { waitUntil: "domcontentloaded" });
   await page.waitForSelector("#loader", { state: "hidden", timeout: 20000 });
   ok(true, "ローダーが消える");
-  await page.waitForFunction(() => window.__BTOB_STATE && window.__BTOB_STATE.counts().aucnet > 4000 && window.__BTOB_STATE.counts().yba > 90, null, { timeout: 40000 });
+  await page.waitForFunction(() => window.__BTOB_STATE && window.__BTOB_STATE.counts().aucnet > 3000 && window.__BTOB_STATE.counts().yba > 90, null, { timeout: 40000 });
   const c = await page.evaluate(() => window.__BTOB_STATE.counts());
   ok(c.aucnet >= 3900 && c.aucnet <= 4278, "初期データ：オークネット 約3,9xx点の集計", c);
   ok(c.yba >= 500, "初期データ：YBA 集計（元データ500件以上）", c);
@@ -154,7 +154,7 @@ async function fresh(viewport) {
   // 再読込で保持（IndexedDB）
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForSelector("#loader", { state: "hidden", timeout: 20000 });
-  await page.waitForFunction(() => window.__BTOB_STATE && window.__BTOB_STATE.counts().aucnet > 4000, null, { timeout: 20000 });
+  await page.waitForFunction(() => window.__BTOB_STATE && window.__BTOB_STATE.counts().aucnet > 3000, null, { timeout: 20000 });
   const c2 = await page.evaluate(() => window.__BTOB_STATE.counts());
   ok(c2.aucnet === c.aucnet && c2.ecoauc === 4 && c2.yba === c.yba, "再読込後もデータ保持（取込分含む）", c2);
   const roiKept = await page.evaluate(() => window.__BTOB_STATE.settings().targetRoi);
@@ -173,7 +173,7 @@ async function fresh(viewport) {
   const { ctx, page, errors } = await fresh({ width: 390, height: 844 });
   await page.goto(URL, { waitUntil: "domcontentloaded" });
   await page.waitForSelector("#loader", { state: "hidden", timeout: 20000 });
-  await page.waitForFunction(() => window.__BTOB_STATE && window.__BTOB_STATE.counts().aucnet > 4000, null, { timeout: 40000 });
+  await page.waitForFunction(() => window.__BTOB_STATE && window.__BTOB_STATE.counts().aucnet > 3000, null, { timeout: 40000 });
   const sw = await page.evaluate(() => document.documentElement.scrollWidth);
   ok(sw <= 391, "横スクロールなし（390px）", sw);
   await page.click("#spSample"); await page.click("#spRun"); await page.waitForSelector("#spTable tbody tr");
