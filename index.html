@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>BtoB 仕入れ判定ナビ｜Merone</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23F5A6C8'/%3E%3Cstop offset='1' stop-color='%23B98BEA'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M14 42l12-12 9 9 15-16' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#fdeef3; --bg2:#faf1f6; --pinkbg:#fbe7ef; --paper:#ffffff;
+  --plum:#574a58; --plum2:#463a48; --pink:#f0a2c5; --pinkd:#c66f96;
+  --blue:#8fbfe6; --blued:#5f97be; --ink:#4f454e; --sub:#9a8993; --line:#f3e3ec;
+  --amber:#c9963f; --amberbg:#fbf2e2; --rose:#c8654f; --rosebg:#fbeeea; --green:#4f9e7f; --greenbg:#e9f4ef;
+  --grad:linear-gradient(135deg,#F5A6C8,#B98BEA);
+  --grad-r:linear-gradient(135deg,#F5A6C8,#C99BE8);
+  --grad-lav:linear-gradient(150deg,#C99BE8,#9E77D6);
+  --shadow:0 12px 28px -18px rgba(87,74,88,.35);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  background:linear-gradient(180deg,#fdf1f4 0%,#fbe9ee 55%,#f3f0f7 100%);
+  color:var(--ink); line-height:1.75; letter-spacing:.01em; min-height:100vh;
+  font-family:"Yu Gothic","YuGothic","游ゴシック","Hiragino Kaku Gothic ProN","Hiragino Sans",-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;
+  -webkit-font-smoothing:antialiased; -webkit-overflow-scrolling:touch; overflow-x:hidden;
+}
+img{max-width:100%; height:auto;}
+button,input,select,textarea{font-family:inherit; font-size:14px; color:var(--ink);}
+button{cursor:pointer;}
+.app{width:100%; max-width:1100px; margin:0 auto; min-height:100vh; position:relative; padding:0 16px 120px;}
+@media (max-width:640px){ .app{padding:0 12px 120px;} }
+
+/* ===== loader / escape ===== */
+#loader{position:fixed; top:0;left:0;right:0;bottom:0; z-index:9000; background:linear-gradient(180deg,#fdf1f4,#f3f0f7); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px; color:var(--plum2); font-weight:800;}
+#loader .sp{width:34px;height:34px;border-radius:50%;border:4px solid #f3e3ec;border-top-color:#c66f96;animation:sp 1s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg)}}
+#escBtn{display:none; position:fixed; right:10px; top:10px; z-index:2147483647; background:#fff; color:var(--plum2); border:2px solid var(--pink); border-radius:999px; padding:8px 14px; font-weight:800; font-size:12px; box-shadow:0 6px 16px rgba(87,74,88,.25);}
+#escBtn.on{display:block;}
+
+/* ===== header ===== */
+.hud{display:flex; align-items:center; gap:12px; padding:14px 2px 10px; flex-wrap:wrap;}
+.hud .mark{font-family:"Times New Roman","YuMincho","Yu Mincho",serif; font-size:21px; font-weight:700; color:var(--plum2); letter-spacing:.03em; line-height:1.15;}
+.hud .mark em{font-style:normal; color:var(--pinkd);}
+.hud .mark small{display:block; font-family:inherit; font-size:10.5px; letter-spacing:.22em; color:#a98bc9; font-weight:800;}
+.hud .who{margin-left:auto; font-size:11px; font-weight:800; color:#fff; background:var(--grad); border-radius:999px; padding:6px 13px; letter-spacing:.04em; box-shadow:0 4px 12px rgba(185,139,234,.3); white-space:nowrap;}
+.hud .cnt{font-size:11px; font-weight:800; color:var(--plum); background:rgba(255,255,255,.9); border:1px solid var(--line); border-radius:999px; padding:5px 12px; white-space:nowrap;}
+@media (max-width:640px){ .hud .who{margin-left:0;} }
+
+/* ===== tabs ===== */
+.tabs{display:flex; gap:6px; overflow-x:auto; padding:4px 0 10px; position:sticky; top:0; z-index:30; background:linear-gradient(180deg,#fdf1f4 75%,rgba(253,241,244,0)); scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex:none; display:flex; align-items:center; gap:7px; border:1px solid var(--line); background:rgba(255,255,255,.92); color:var(--plum); border-radius:999px; padding:9px 15px; font-size:12.5px; font-weight:800; letter-spacing:.03em; box-shadow:0 8px 20px -16px rgba(87,74,88,.4); transition:.15s;}
+.tab svg{width:17px;height:17px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+.tab.on{background:var(--grad); color:#fff; border-color:transparent; box-shadow:0 8px 18px rgba(185,139,234,.35);}
+
+/* ===== views ===== */
+.view{display:none;}
+.view.on{display:block;}
+.card{background:var(--paper); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); padding:18px; margin-top:14px;}
+.card h2{font-size:15px; color:var(--plum2); letter-spacing:.03em; display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px;}
+.card h2 .tag{font-size:10px; font-weight:800; letter-spacing:.16em; color:#fff; background:var(--grad-lav); border-radius:999px; padding:3px 11px;}
+.card h2 small{font-size:11px; color:var(--sub); font-weight:700; margin-left:auto;}
+.hint{font-size:11.5px; color:var(--sub); margin:2px 0 8px;}
+.hero{display:flex; gap:14px; align-items:flex-start; margin-top:14px;}
+.hero .ava{flex:none; width:68px; height:68px; border-radius:999px; overflow:hidden; border:3px solid #fff; box-shadow:0 6px 16px rgba(198,111,150,.28); background:#fff;}
+.hero .ava img{width:100%; height:100%; object-fit:cover;}
+.hero .msg{flex:1; min-width:0; background:var(--paper); border:1px solid var(--line); border-radius:20px; padding:14px 16px; box-shadow:var(--shadow); position:relative;}
+.hero .msg::before{content:""; position:absolute; left:-9px; top:22px; width:16px; height:16px; background:var(--paper); border-left:1px solid var(--line); border-bottom:1px solid var(--line); transform:rotate(45deg);}
+.hero .name{font-size:14.5px; font-weight:800; color:var(--plum2);}
+.hero .name i{font-style:normal; font-size:10.5px; color:#fff; background:var(--grad-lav); border-radius:999px; padding:2px 9px; margin-left:6px; vertical-align:2px;}
+.hero p{font-size:12.5px; margin-top:4px;}
+.chips{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;}
+.chips i{font-style:normal; font-size:10.5px; font-weight:700; color:var(--plum); background:var(--bg2); border:1px solid var(--line); border-radius:999px; padding:3px 10px;}
+
+/* ===== form controls ===== */
+.row{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;}
+.row > *{min-width:0;}
+.f{display:flex; flex-direction:column; gap:4px; flex:1 1 160px;}
+.f label{font-size:11px; font-weight:800; color:var(--plum);}
+.f input,.f select,.f textarea,textarea.big{width:100%; border:1.5px solid var(--line); background:#fffdfd; border-radius:13px; padding:10px 12px; font-size:14px; line-height:1.6; -webkit-appearance:none; appearance:none;}
+.f select{background:#fffdfd url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23c66f96' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center; padding-right:30px;}
+.f input:focus,.f select:focus,.f textarea:focus,textarea.big:focus{outline:none; border-color:var(--pink); box-shadow:0 0 0 3px rgba(240,162,197,.18);}
+textarea.big{min-height:120px; resize:vertical; font-size:12.5px; font-family:ui-monospace,Menlo,Consolas,monospace; white-space:pre;}
+.arrow{align-self:center; font-size:22px; color:var(--pinkd); font-weight:800; padding:0 2px 6px;}
+.btn{border:none; border-radius:999px; padding:12px 20px; font-size:14px; font-weight:800; letter-spacing:.05em; background:var(--grad); color:#fff; box-shadow:0 10px 24px rgba(185,139,234,.35);}
+.btn:active{transform:translateY(1px);}
+.btn[disabled]{opacity:.6; cursor:default;}
+.btn.sub{background:#fff; color:var(--plum); border:1.5px solid var(--line); box-shadow:none;}
+.btn.sm{padding:8px 14px; font-size:12px;}
+.btn.lav{background:var(--grad-lav);}
+.btns{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; align-items:center;}
+.file{position:relative; overflow:hidden; display:inline-block;}
+.file input{position:absolute; left:0; top:0; width:100%; height:100%; opacity:0; cursor:pointer;}
+.sw{display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--plum); cursor:pointer;}
+.sw input{width:16px;height:16px; accent-color:#c66f96;}
+.mkchips{display:flex; gap:6px; flex-wrap:wrap;}
+.mkchip{border:1.5px solid var(--line); background:#fff; color:var(--plum); border-radius:999px; padding:8px 14px; font-size:12.5px; font-weight:800;}
+.mkchip.on{background:var(--grad); color:#fff; border-color:transparent;}
+
+/* ===== tiles ===== */
+.tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px; margin-top:12px;}
+.tile{border:1px solid var(--line); border-radius:14px; padding:10px 12px; background:#fff;}
+.tile .l{font-size:10px; color:var(--sub); font-weight:700;}
+.tile .v{font-size:19px; color:var(--plum2); font-weight:800; line-height:1.3; word-break:break-all;}
+.tile .v small{font-size:10.5px; color:var(--sub); font-weight:700;}
+.tile.hi{background:linear-gradient(135deg,#fff5f9,#f6f0fb);}
+
+/* ===== tables ===== */
+.tw{overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:12px; border:1px solid var(--line); border-radius:14px; background:#fff;}
+table{border-collapse:collapse; width:100%; min-width:760px; font-size:12.5px;}
+th,td{padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; text-align:left;}
+th{font-size:10.5px; color:var(--sub); font-weight:800; letter-spacing:.04em; background:#fdf7fa; position:sticky; top:0; white-space:nowrap;}
+td.num,th.num{text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums;}
+tr:last-child td{border-bottom:none;}
+td .ttl{font-weight:800; color:var(--plum2);}
+td .meta{font-size:10.5px; color:var(--sub); display:flex; gap:6px; flex-wrap:wrap;}
+td .meta i{font-style:normal; white-space:nowrap;}
+td .big{font-size:14px; font-weight:800; color:var(--plum2);}
+td .band{font-size:10.5px; color:var(--sub); white-space:nowrap;}
+td input.bid{width:96px; border:1.5px solid var(--line); border-radius:10px; padding:6px 8px; font-size:13px; text-align:right; background:#fffdfd;}
+td input.bid:focus{outline:none; border-color:var(--pink);}
+.j{display:inline-flex; align-items:center; justify-content:center; min-width:34px; height:34px; border-radius:12px; font-weight:800; font-size:16px; color:#fff; padding:0 8px;}
+.j.best{background:var(--grad);} .j.good{background:var(--grad-lav);} .j.thin{background:var(--amber);} .j.bad{background:var(--rose);} .j.na{background:#cdbfc9;} .j.info{background:var(--blued);}
+.jl{font-size:10.5px; color:var(--sub); display:block; margin-top:2px; white-space:nowrap;}
+.conf{font-size:10px; font-weight:800; border-radius:999px; padding:1px 8px; border:1px solid var(--line); color:var(--plum); background:#fff;}
+.conf.h{background:var(--greenbg); color:var(--green); border-color:transparent;} .conf.m{background:var(--amberbg); color:var(--amber); border-color:transparent;} .conf.l{background:#f3eef2;} .conf.e{background:var(--rosebg); color:var(--rose); border-color:transparent;}
+.pill{display:inline-block; font-size:10.5px; font-weight:800; border-radius:999px; padding:2px 9px; background:var(--bg2); border:1px solid var(--line); color:var(--plum);}
+.pill.src{background:#eef4fb; color:var(--blued); border-color:transparent;}
+.pill.seed{background:#f3eefb; color:#8a6fb3; border-color:transparent;}
+.ok{color:var(--green); font-weight:800;} .ng{color:var(--rose); font-weight:800;}
+.empty{text-align:center; padding:26px 10px; color:var(--sub); font-size:12.5px;}
+.empty img{height:110px; width:auto; display:block; margin:0 auto 8px;}
+
+/* ===== data tab ===== */
+.map{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; margin-top:10px;}
+.map .f label{font-size:10.5px;}
+.dsc{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:12px;}
+.ds{border:1px solid var(--line); border-radius:16px; padding:12px 14px; background:#fff;}
+.ds b{display:block; font-size:13.5px; color:var(--plum2);}
+.ds .n{font-size:22px; font-weight:800; color:var(--plum2); line-height:1.2;}
+.ds .n small{font-size:11px; color:var(--sub); font-weight:700;}
+.ds ul{list-style:none; margin-top:6px;}
+.ds li{font-size:11px; color:var(--sub); display:flex; gap:6px; align-items:center; justify-content:space-between; padding:3px 0; border-top:1px dashed var(--line);}
+.ds li button{border:none; background:#f3eef2; color:var(--plum); border-radius:999px; padding:3px 9px; font-size:10.5px; font-weight:800;}
+.code{font-family:ui-monospace,Menlo,Consolas,monospace; font-size:11.5px; background:#f7f1f5; border-radius:10px; padding:10px 12px; word-break:break-all; color:var(--plum2);}
+
+/* ===== settings ===== */
+.sgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:8px;}
+.sgrid .f label{font-size:10.5px;}
+.sgrid .f input{padding:8px 10px; font-size:13.5px;}
+.sgrid .f small{font-size:10px; color:var(--sub);}
+.fact{font-size:11px; color:var(--sub); margin-top:4px;}
+.fact b{color:var(--plum);}
+
+/* ===== help ===== */
+.steps{counter-reset:s; list-style:none; margin-top:6px;}
+.steps li{position:relative; padding:8px 0 8px 34px; font-size:13px; border-top:1px dashed var(--line);}
+.steps li::before{counter-increment:s; content:counter(s); position:absolute; left:0; top:9px; width:24px; height:24px; border-radius:999px; background:var(--grad); color:#fff; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center;}
+.formula{font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; background:#f7f1f5; border-radius:12px; padding:12px 14px; color:var(--plum2); line-height:1.9; white-space:pre-wrap;}
+.note{border-left:4px solid var(--pink); background:#fff8fb; border-radius:0 12px 12px 0; padding:10px 14px; font-size:12.5px; margin-top:10px;}
+a{color:var(--pinkd);}
+
+/* ===== footer / toast / bug / debug ===== */
+footer{text-align:center; padding:34px 10px 10px; font-size:10.5px; color:var(--sub);}
+footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6px;}
+#toast{position:fixed; left:50%; transform:translateX(-50%); bottom:90px; z-index:8000; display:none; background:rgba(70,58,72,.92); color:#fff; font-size:12px; font-weight:700; border-radius:999px; padding:10px 18px; max-width:86vw; text-align:center;}
+#toast.on{display:block;}
+#bugL{position:fixed; left:12px; bottom:16px; z-index:59; background:rgba(255,255,255,.92); border:1px solid #eadfe7; color:#a2949d; font-size:10.5px; font-weight:800; border-radius:999px; padding:5px 12px; letter-spacing:.04em;}
+#bugM{position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(70,58,72,.55); display:none; align-items:center; justify-content:center; z-index:7000; padding:24px;}
+#bugM.on{display:flex;}
+#bugM .bx{background:#fff; border-radius:20px; padding:22px 20px; max-width:360px; width:100%;}
+#bugM h3{font-size:14.5px; color:var(--plum2); margin-bottom:8px;}
+#bugM textarea{width:100%; border:1.5px solid var(--line); border-radius:12px; padding:11px 13px; font-size:14px; line-height:1.8; min-height:100px; resize:vertical;}
+#bugM .bb{display:flex; gap:8px; margin-top:12px;}
+#bugM .bb button{flex:1; border:none; border-radius:999px; padding:11px; font-size:13px; font-weight:800;}
+#bugM .s{background:var(--grad); color:#fff;} #bugM .c{background:#f3eef2; color:var(--plum);}
+#bugD{display:none; font-size:12.5px; color:var(--pinkd); font-weight:800; margin-top:8px; text-align:center;}
+#dbg{display:none; position:fixed; left:8px; right:8px; top:52px; z-index:9500; background:rgba(70,58,72,.94); color:#fff; font-size:11px; border-radius:10px; padding:10px 12px; max-height:40vh; overflow:auto; -webkit-overflow-scrolling:touch; line-height:1.6; white-space:pre-wrap; font-family:ui-monospace,Menlo,monospace;}
+</style>
+</head>
+<body>
+<div id="loader"><div class="sp"></div><div>読み込み中…</div></div>
+<button id="escBtn" type="button">画面を復旧する</button>
+<div id="dbg"></div>
+
+<div class="app">
+  <header class="hud">
+    <div class="mark"><em>BtoB</em> 仕入れ判定ナビ<small>ECOAUC × AUCNET × YBA</small></div>
+    <span class="cnt" id="dataBadge">相場データ：読込中</span>
+    <span class="who">Merone 社内用</span>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab on" data-v="spread" type="button"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>仕入れ判定</button>
+    <button class="tab" data-v="exit" type="button"><svg viewBox="0 0 24 24"><path d="M3 7h13v10H3z"/><path d="M16 10h5l-2 2 2 2h-5"/></svg>出口判定（Re:che）</button>
+    <button class="tab" data-v="data" type="button"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>相場データ</button>
+    <button class="tab" data-v="settings" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>手数料・設定</button>
+    <button class="tab" data-v="help" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7"/><path d="M12 17h.01"/></svg>使い方</button>
+  </nav>
+
+  <main>
+    <!-- ================= 仕入れ判定 ================= -->
+    <section class="view on" id="v-spread">
+      <div class="hero">
+        <div class="ava"><img src="img/kumiko-head-avatar.png?v=20261013a" alt=""></div>
+        <div class="msg">
+          <div class="name">仕入れ判定<i>市場またぎ</i></div>
+          <p id="heroMsg">こんにちは☺️ エコオクの出品リストを貼ると、「オークネットならいくらで売れそうか」「いくらまで入札してOKか」を1点ずつ出します。価格差で仕入れを決める時に使ってください。</p>
+          <div class="chips"><i>税抜で計算</i><i>手数料・送料込み</i><i>データは端末内だけに保存</i></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="tag">STEP 1</span>市場の向き<small>どこで買って、どこで売る？</small></h2>
+        <div class="row">
+          <div class="f"><label>仕入れ市場（買う）</label>
+            <select id="buyMk"><option value="ecoauc">エコオク</option><option value="aucnet">オークネット</option><option value="yba">YBA</option></select></div>
+          <div class="arrow">→</div>
+          <div class="f"><label>販売市場（売る）</label>
+            <select id="sellMk"><option value="aucnet">オークネット</option><option value="ecoauc">エコオク</option><option value="yba">YBA</option><option value="mercari">メルカリ（参考・取込時のみ）</option></select></div>
+          <div class="f" style="flex:0 0 auto"><label>&nbsp;</label><label class="sw"><input type="checkbox" id="spTax"> 支払額を税込でも表示</label></div>
+        </div>
+        <p class="hint" id="mkHint"></p>
+      </div>
+
+      <div class="card">
+        <h2><span class="tag">STEP 2</span>リストで判定<small>出品リストを貼る／CSVを選ぶ</small></h2>
+        <p class="hint">エコオクの出品一覧・下見リストを表ごとコピーして貼り付け（ヘッダー行があれば自動で列を判定）。列：ブランド／商品名／ランク／型番／スタート価格／入札予定額。入札額が無ければスタート価格で仮判定し、表の中で入札額を打ち直せます。</p>
+        <textarea class="big" id="spList" placeholder="例）&#10;ブランド	商品名	ランク	スタート価格&#10;CHANEL	マトラッセ チェーンショルダー A01112	B	60000&#10;ルイヴィトン	ジッピーウォレット M81279	A	30000"></textarea>
+        <div class="btns">
+          <button class="btn" id="spRun" type="button">判定する</button>
+          <span class="file"><button class="btn sub" type="button">CSV / Excel を選ぶ</button><input type="file" id="spFile" accept=".csv,.tsv,.txt,.xlsx,.xls"></span>
+          <button class="btn sub sm" id="spSample" type="button">サンプルを入れる</button>
+          <button class="btn sub sm" id="spClear" type="button">クリア</button>
+        </div>
+        <div id="spSummary" class="tiles" style="display:none"></div>
+        <div class="btns" id="spActions" style="display:none">
+          <div class="f" style="flex:0 0 180px"><label>並び順</label><select id="spSort"><option value="judge">判定が良い順</option><option value="profit">粗利が大きい順</option><option value="input">入力順</option></select></div>
+          <button class="btn sub sm" id="spCsv" type="button">CSVで書き出す</button>
+          <button class="btn lav sm" id="spCopySheet" type="button">入札シート形式でコピー</button>
+        </div>
+        <div class="tw" id="spWrap" style="display:none"><table id="spTable"><thead><tr>
+          <th>#</th><th>商品</th><th>販売相場（<span id="spSellName">オークネット</span>）</th><th class="num">手残り</th><th class="num">上限入札額</th><th class="num">入札額</th><th class="num">粗利 / ROI</th><th>判定</th></tr></thead><tbody></tbody></table></div>
+      </div>
+
+      <div class="card">
+        <h2><span class="tag">単品</span>1点だけ判定<small>手入力</small></h2>
+        <div class="row">
+          <div class="f" style="flex:2 1 200px"><label>ブランド／商品名</label><input id="sgBrand" placeholder="例）シャネル マトラッセ A01112"></div>
+          <div class="f"><label>品目</label><select id="sgCat"></select></div>
+          <div class="f" style="flex:0 1 120px"><label>ランク</label><select id="sgRank"><option value="">不明</option><option>N</option><option>S</option><option>A</option><option>AB</option><option>B</option><option>BC</option><option>C</option><option>D</option></select></div>
+          <div class="f" style="flex:0 1 150px"><label>入札額（任意・税抜）</label><input id="sgPrice" inputmode="numeric" placeholder="例）60000"></div>
+          <button class="btn" id="sgRun" type="button">判定</button>
+        </div>
+        <div id="sgOut"></div>
+      </div>
+    </section>
+
+    <!-- ================= 出口判定 ================= -->
+    <section class="view" id="v-exit">
+      <div class="hero">
+        <div class="ava"><img src="img/kumiko-head-avatar.png?v=20261013a" alt=""></div>
+        <div class="msg">
+          <div class="name">出口判定<i>Re:che 仕入れ品</i></div>
+          <p>Re:cheで仕入れた在庫を「業者オークション（オークネット）に流したらいくら残るか」と「メルカリで売ったらいくら残るか」を並べます。在庫管理表の行をそのまま貼れます（商品名／状態／仕入単価／予想売価）。</p>
+          <div class="chips"><i>在庫管理表の形式に対応</i><i>即換金 or 粘る を提案</i></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2><span class="tag">貼る</span>在庫リスト<small>ヘッダー行ごと貼ると列を自動判定</small></h2>
+        <textarea class="big" id="exList" placeholder="例）&#10;番号	商品名	状態	仕入単価	予想売価&#10;1	ルイヴィトン　ジッピーウォレット　モノグラム　長財布　M81279	2.未使用に近い	54000	90000"></textarea>
+        <div class="btns">
+          <button class="btn" id="exRun" type="button">出口を判定する</button>
+          <span class="file"><button class="btn sub" type="button">CSV / Excel を選ぶ</button><input type="file" id="exFile" accept=".csv,.tsv,.txt,.xlsx,.xls"></span>
+          <button class="btn sub sm" id="exSample" type="button">サンプルを入れる</button>
+          <button class="btn sub sm" id="exClear" type="button">クリア</button>
+        </div>
+        <div id="exSummary" class="tiles" style="display:none"></div>
+        <div class="btns" id="exActions" style="display:none"><button class="btn sub sm" id="exCsv" type="button">CSVで書き出す</button></div>
+        <div class="tw" id="exWrap" style="display:none"><table id="exTable"><thead><tr>
+          <th>#</th><th>商品</th><th class="num">仕入単価</th><th>業者オク（オークネット）</th><th>メルカリ</th><th>おすすめ</th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- ================= 相場データ ================= -->
+    <section class="view" id="v-data">
+      <div class="card">
+        <h2><span class="tag">いま入っているデータ</span>市場ごとの件数<small>端末内（この端末のブラウザ）に保存</small></h2>
+        <div class="dsc" id="dmStats"></div>
+        <div class="btns">
+          <button class="btn sub sm" id="dmExport" type="button">全データをJSONで書き出す（バックアップ）</button>
+          <span class="file"><button class="btn sub sm" type="button">JSONを読み込む</button><input type="file" id="dmImportJson" accept=".json"></span>
+        </div>
+      </div>
+      <div class="card">
+        <h2><span class="tag">取り込み</span>落札相場を追加<small>CSV / Excel / 表の貼り付け</small></h2>
+        <p class="hint">① 市場を選ぶ → ② 会員サイトの落札履歴・相場検索結果を「CSV保存」または「表を選んでコピー」→ ③ ここに入れる。列は自動判定され、下で直せます。</p>
+        <div class="mkchips" id="dmMk">
+          <button class="mkchip on" data-mk="ecoauc" type="button">エコオク</button>
+          <button class="mkchip" data-mk="aucnet" type="button">オークネット</button>
+          <button class="mkchip" data-mk="yba" type="button">YBA</button>
+          <button class="mkchip" data-mk="mercari" type="button">メルカリ実売</button>
+        </div>
+        <div class="btns">
+          <span class="file"><button class="btn sub" type="button">CSV / Excel を選ぶ</button><input type="file" id="dmFile" accept=".csv,.tsv,.txt,.xlsx,.xls"></span>
+          <span class="hint" style="margin:0">または下に貼り付け</span>
+        </div>
+        <textarea class="big" id="dmText" placeholder="ここに表を貼り付け（タブ区切り / カンマ区切り）"></textarea>
+        <div class="btns"><button class="btn sub sm" id="dmParse" type="button">貼り付けた表を読む</button></div>
+        <div id="dmPreview"></div>
+      </div>
+      <div class="card">
+        <h2><span class="tag">便利</span>表をコピーするブックマークレット<small>PC向け</small></h2>
+        <p class="hint">会員サイトの一覧ページで押すと、ページ内の一番大きい表をタブ区切りでコピーします。下のリンクをブックマークバーへドラッグ（または右クリック→ブックマークに追加）。自分のアカウントで表示している画面を読むだけで、サイトへは何も送りません。</p>
+        <p><a id="dmBookmarklet" href="#">📋 表をコピー（BtoBナビ用）</a></p>
+      </div>
+    </section>
+
+    <!-- ================= 設定 ================= -->
+    <section class="view" id="v-settings">
+      <div class="card">
+        <h2><span class="tag">手数料と送料</span>計算に使う数字<small>税抜・実績ベース。仮の値は書き換えてください</small></h2>
+        <p class="hint">「実績」は請求書・計算書から確認した値、「仮」は未確認の暫定値です。粗利 ＝ 売値 −（売り手数料 ＋ 出荷送料）−（落札額 ＋ 買い手数料 ＋ 入荷送料）。</p>
+        <div id="stForm"></div>
+        <div class="btns">
+          <button class="btn" id="stSave" type="button">保存する</button>
+          <button class="btn sub sm" id="stReset" type="button">初期値に戻す</button>
+          <button class="btn lav sm" id="stHealth" type="button">🩺 動作チェック</button>
+        </div>
+        <div id="stHealthOut"></div>
+      </div>
+    </section>
+
+    <!-- ================= 使い方 ================= -->
+    <section class="view" id="v-help">
+      <div class="card">
+        <h2><span class="tag">流れ</span>このツールの使い方</h2>
+        <ol class="steps">
+          <li><b>相場データを入れる</b>：「相場データ」タブで、売り先の落札履歴を取り込む（オークネットは初期データとして2025-12の卸リスト4,278点を換算済みで同梱）。</li>
+          <li><b>仕入れ判定</b>：エコオクの出品一覧を貼る → 1点ずつ「販売相場・手残り・上限入札額・判定」が出る → 入札額を打ち直して粗利を確認 → 「入札シート形式でコピー」で入札シートへ。</li>
+          <li><b>出口判定</b>：Re:che在庫を貼る → 業者オクに流した手残りとメルカリの手残りを比較 → 即換金か粘るかを決める。</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h2><span class="tag">エコオク</span>落札履歴の取り方</h2>
+        <ol class="steps">
+          <li>会員サイト（ecoauc.com/client）にログイン → 過去開催の「落札結果／売買履歴」を開く（過去30回分が無料で見られます）。</li>
+          <li>ブランド・カテゴリで絞り込み → 一覧の表をドラッグで選択してコピー（またはブックマークレット「表をコピー」）。</li>
+          <li>「相場データ」タブで市場＝エコオクを選び、貼り付け → 列を確認 → 取り込む。列は「ブランド名／商品名／ランク／型番／落札価格」があれば十分です。</li>
+        </ol>
+        <p class="hint">エコオクのランクは N・S・A・AB・B・BC・C・D・F の9段階。落札額には消費税10%が別途、落札手数料は 1万円以下500円／5万円未満1,000円／5万円以上2,000円（税別）、送料は翌月請求（利用規約・請求書より）。</p>
+      </div>
+      <div class="card">
+        <h2><span class="tag">オークネット</span>相場の取り方</h2>
+        <ol class="steps">
+          <li>会員サイト（member.brand-auc.com）にログイン → 「相場検索」（過去1年・約40万点）でブランド・形状を検索。</li>
+          <li>結果一覧をコピー、またはCSV出力（auctionItems_…csv：メーカー／ジャンル／形状／型番／商品名／評価／外装評価／内装評価／価格 の列をそのまま読めます）。</li>
+          <li>「相場データ」タブで市場＝オークネット → 取り込む。卸リスト（卸価格）を入れる時は「卸価格→÷1.10で落札相場に換算」にチェック。</li>
+        </ol>
+        <p class="hint">評価は S（新品）／A（保存状態良）／B（中古・綺麗）／C（中古）／D（リペア必要）＋内装・外装（1＝ダメージ小、2＝大、＋は良い）。少しでも傷があるとCになる厳しめ基準なので、初期設定では「オークネットのランク＋1段」で他市場と揃えています。落札料は4%（最低500円）、成約料は3%（プレミアム）。金額はすべて税抜表示です。</p>
+      </div>
+      <div class="card">
+        <h2><span class="tag">計算式</span>判定の中身</h2>
+        <div class="formula">販売相場      ＝ 売り先データから「型番一致 ＞ ブランド×品目×同ランク ＞ ブランド×品目（ランク補正） ＞ ブランド×大分類」の順で探し、中央値を採用（上下5%トリム、帯＝25〜75%）
+ランク補正    ＝ 1段につき ×1.10（例：相場がBでこの品がAなら ×1.10、Cなら ÷1.10）。実データの最高・最安の範囲内に収める
+手残り        ＝ 販売相場 − 売り手数料 − 出荷送料
+仕入れ総額    ＝ 入札額 ＋ 買い手数料 ＋ 入荷送料（税抜）
+粗利          ＝ 手残り − 仕入れ総額　　ROI ＝ 粗利 ÷ 仕入れ総額
+上限入札額    ＝ ROIが目標（初期値30%）になる入札額（100円単位に切り下げ）
+判定          ◎ ROI≧30% かつ 粗利≧5,000円 ／ ○ ROI≧15% かつ 粗利≧3,000円 ／ △ 粗利プラス ／ × 赤字
+出口判定      業者オクの手残りがメルカリ手残りの70%以上なら「即換金」を提案（回転優先）。業者オクの実データが無い時はメルカリ相場×係数（HERMES/CHANEL/LV 0.80・GUCCI/PRADA等 0.60・他 0.45）で推定し「推定」と明示</div>
+        <div class="note">相場が無いブランド×品目は数字を出しません（当てずっぽうの数字は事故のもと）。その場合は売り先の会員サイトで該当ブランドを検索して取り込んでください。ランク違い・付属品・年代で実際の落札額は上下します。判定は入札の目安であり、最終判断は現物と写真の確認で。</div>
+      </div>
+      <div class="card">
+        <h2><span class="tag">データの扱い</span>保存場所と注意</h2>
+        <p class="hint">取り込んだ相場データはこの端末のブラウザ（IndexedDB）だけに保存され、どこにも送信されません。別の端末でも使いたい時は「相場データ」タブのJSON書き出し→読み込みで移せます。ブラウザのデータ消去をすると消えるので、取り込み後はバックアップをおすすめします。各会員サイトの利用規約により、データは自社の仕入れ判断にのみ使ってください。</p>
+        <p class="hint">バージョン <span id="verLabel"></span>。不具合は左下の「不具合を報告」から送れます。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <img src="img/kumiko-pink-peace.png?v=20261013a" alt="">
+    <p>Merone 社内ツール ／ BtoB 仕入れ判定ナビ</p>
+  </footer>
+</div>
+
+<button id="bugL" type="button">不具合を報告</button>
+<div id="bugM"><div class="bx">
+  <h3>不具合・改善の報告</h3>
+  <textarea id="bugT" placeholder="何をした時に、どうなりましたか？（例：オークネットCSVを取り込んだら件数が0件だった）"></textarea>
+  <div class="bb"><button class="c" id="bugC" type="button">閉じる</button><button class="s" id="bugS" type="button">送信</button></div>
+  <div id="bugD">送信しました。ありがとうございます！</div>
+</div></div>
+<div id="toast"></div>
+
+<script src="js/engine.js?v=20261013a"></script>
+<script src="js/app.js?v=20261013a"></script>
+</body>
+</html>
