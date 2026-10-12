@@ -203,7 +203,7 @@ footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6p
     <!-- ================= 仕入れ判定 ================= -->
     <section class="view on" id="v-spread">
       <div class="hero">
-        <div class="ava"><img src="img/kumiko-head-avatar.png?v=20261013a" alt=""></div>
+        <div class="ava"><img src="img/kumiko-head-avatar.png?v=20261013b" alt=""></div>
         <div class="msg">
           <div class="name">仕入れ判定<i>市場またぎ</i></div>
           <p id="heroMsg">こんにちは☺️ エコオクの出品リストを貼ると、「オークネットならいくらで売れそうか」「いくらまで入札してOKか」を1点ずつ出します。価格差で仕入れを決める時に使ってください。</p>
@@ -260,7 +260,7 @@ footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6p
     <!-- ================= 出口判定 ================= -->
     <section class="view" id="v-exit">
       <div class="hero">
-        <div class="ava"><img src="img/kumiko-head-avatar.png?v=20261013a" alt=""></div>
+        <div class="ava"><img src="img/kumiko-head-avatar.png?v=20261013b" alt=""></div>
         <div class="msg">
           <div class="name">出口判定<i>Re:che 仕入れ品</i></div>
           <p>Re:cheで仕入れた在庫を「業者オークション（オークネット）に流したらいくら残るか」と「メルカリで売ったらいくら残るか」を並べます。在庫管理表の行をそのまま貼れます（商品名／状態／仕入単価／予想売価）。</p>
@@ -294,8 +294,9 @@ footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6p
         </div>
       </div>
       <div class="card">
-        <h2><span class="tag">取り込み</span>落札相場を追加<small>CSV / Excel / 表の貼り付け</small></h2>
-        <p class="hint">① 市場を選ぶ → ② 会員サイトの落札履歴・相場検索結果を「CSV保存」または「表を選んでコピー」→ ③ ここに入れる。列は自動判定され、下で直せます。</p>
+        <h2><span class="tag">取り込み</span>落札相場を追加<small>ワンクリック送信 / CSV / Excel / 貼り付け</small></h2>
+        <div id="dmRecv" class="note" style="display:none">ブックマークレットからの受信を待っています。会員サイトの画面で「📥 BtoBナビへ送る」を押してください。届くとここに表が出ます。</div>
+        <p class="hint">① 市場を選ぶ → ② 会員サイトの一覧を「📥 BtoBナビへ送る」ブックマークで送る／CSV保存／表をコピー → ③ ここに入れる。列は自動判定され、下で直せます。</p>
         <div class="mkchips" id="dmMk">
           <button class="mkchip on" data-mk="ecoauc" type="button">エコオク</button>
           <button class="mkchip" data-mk="aucnet" type="button">オークネット</button>
@@ -311,9 +312,14 @@ footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6p
         <div id="dmPreview"></div>
       </div>
       <div class="card">
-        <h2><span class="tag">便利</span>表をコピーするブックマークレット<small>PC向け</small></h2>
-        <p class="hint">会員サイトの一覧ページで押すと、ページ内の一番大きい表をタブ区切りでコピーします。下のリンクをブックマークバーへドラッグ（または右クリック→ブックマークに追加）。自分のアカウントで表示している画面を読むだけで、サイトへは何も送りません。</p>
-        <p><a id="dmBookmarklet" href="#">📋 表をコピー（BtoBナビ用）</a></p>
+        <h2><span class="tag">ワンクリック</span>会員サイトから直接送る<small>PC向け・コピペ不要</small></h2>
+        <ol class="steps">
+          <li>下のリンクを、ブラウザのブックマークバーへドラッグして登録する（最初の1回だけ）。</li>
+          <li>エコオクやオークネットに自分のIDでログインし、落札結果・相場検索・出品一覧のページを開く。</li>
+          <li>登録したブックマークを押す。一覧（「次へ」があれば最大20ページ分）を読み取り、このナビの画面が開いて取り込み確認に進みます。</li>
+        </ol>
+        <p style="margin-top:10px"><a id="dmBookmarklet" href="#">📥 BtoBナビへ送る</a></p>
+        <p class="hint">自分のブラウザに表示されている画面を読むだけで、サイトへの操作や外部送信はしません。読み取った内容はこの端末にだけ保存されます。出品一覧を送れば「仕入れ判定」のリストにもそのまま使えます（取り込み画面の表をコピーして貼る）。</p>
       </div>
     </section>
 
@@ -346,7 +352,7 @@ footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6p
         <h2><span class="tag">エコオク</span>落札履歴の取り方</h2>
         <ol class="steps">
           <li>会員サイト（ecoauc.com/client）にログイン → 過去開催の「落札結果／売買履歴」を開く（過去30回分が無料で見られます）。</li>
-          <li>ブランド・カテゴリで絞り込み → 一覧の表をドラッグで選択してコピー（またはブックマークレット「表をコピー」）。</li>
+          <li>ブランド・カテゴリで絞り込み → ブックマーク「📥 BtoBナビへ送る」を押す（または一覧の表を選択してコピー）。</li>
           <li>「相場データ」タブで市場＝エコオクを選び、貼り付け → 列を確認 → 取り込む。列は「ブランド名／商品名／ランク／型番／落札価格」があれば十分です。</li>
         </ol>
         <p class="hint">エコオクのランクは N・S・A・AB・B・BC・C・D・F の9段階。落札額には消費税10%が別途、落札手数料は 1万円以下500円／5万円未満1,000円／5万円以上2,000円（税別）、送料は翌月請求（利用規約・請求書より）。</p>
@@ -381,7 +387,7 @@ footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6p
   </main>
 
   <footer>
-    <img src="img/kumiko-pink-peace.png?v=20261013a" alt="">
+    <img src="img/kumiko-pink-peace.png?v=20261013b" alt="">
     <p>Merone 社内ツール ／ BtoB 仕入れ判定ナビ</p>
   </footer>
 </div>
@@ -395,7 +401,7 @@ footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6p
 </div></div>
 <div id="toast"></div>
 
-<script src="js/engine.js?v=20261013a"></script>
-<script src="js/app.js?v=20261013a"></script>
+<script src="js/engine.js?v=20261013b"></script>
+<script src="js/app.js?v=20261013b"></script>
 </body>
 </html>

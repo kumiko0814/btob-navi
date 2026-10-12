@@ -4,7 +4,7 @@
 (function () {
   "use strict";
   var B = window.BTOB;
-  var V = "20261013a";
+  var V = "20261013b";
   var $ = function (id) { return document.getElementById(id); };
   var P = new URLSearchParams(location.search);
   var DEBUG = P.get("debug") === "1";
@@ -533,12 +533,34 @@
     };
     fr.readAsText(f); this.value = "";
   };
-  // ブックマークレット：ページ内で一番大きい表をTSVでコピー
+  // ブックマークレット（ワンクリック取込）：js/bookmarklet.src.js を読み込んで javascript: リンクにする
   (function () {
-    var code = "(function(){var ts=[].slice.call(document.querySelectorAll('table'));if(!ts.length){alert('表が見つかりません');return;}ts.sort(function(a,b){return b.rows.length-a.rows.length;});var t=ts[0],out=[];for(var i=0;i<t.rows.length;i++){var r=t.rows[i],c=[];for(var j=0;j<r.cells.length;j++){c.push((r.cells[j].innerText||'').replace(/[\\t\\r\\n]+/g,' ').trim());}out.push(c.join('\\t'));}var s=out.join('\\n');function done(){alert('表をコピーしました（'+t.rows.length+'行）。BtoBナビの「相場データ」に貼り付けてください');}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(s).then(done,function(){prompt('コピーできない時はここから全選択→コピー',s);});}else{prompt('全選択→コピー',s);}})();";
-    $("dmBookmarklet").setAttribute("href", "javascript:" + encodeURIComponent(code));
-    $("dmBookmarklet").onclick = function (e) { if (location.protocol.indexOf("http") === 0) { e.preventDefault(); toast("このリンクをブックマークバーへドラッグして使います"); } };
+    var toolUrl = location.origin + location.pathname.replace(/[^/]*$/, "");
+    fetch("js/bookmarklet.src.js?v=" + V).then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.text(); }).then(function (src) {
+      var code = src.replace(/\/\*[\s\S]*?\*\//, "").replace("__TOOL__", toolUrl).replace(/\n\s*/g, " ").trim();
+      $("dmBookmarklet").setAttribute("href", "javascript:" + encodeURIComponent(code));
+    }).catch(function (e) { log("bookmarklet load fail", e.message); $("dmBookmarklet").textContent = "ブックマークレットを読み込めませんでした（再読込してください）"; });
+    $("dmBookmarklet").onclick = function (e) { if (location.protocol.indexOf("http") === 0) { e.preventDefault(); toast("このリンクをブックマークバーへドラッグして登録します（クリックでは動きません）"); } };
   })();
+  // ブックマークレットからの受信（postMessage）。受け取った表はプレビューに出すだけで、取り込みは人が押す
+  var lastRecvKey = "";
+  function marketFromUrl(u) { u = ("" + (u || "")).toLowerCase(); if (/ecoauc|eco-ring|ecoring/.test(u)) return "ecoauc"; if (/brand-auc|aucnet/.test(u)) return "aucnet"; if (/ybagroup|\byba\b/.test(u)) return "yba"; if (/mercari/.test(u)) return "mercari"; return null; }
+  window.addEventListener("message", function (ev) {
+    var d = ev.data; if (!d || d.type !== "btob-rows" || !Array.isArray(d.rows)) return;
+    var rows = d.rows.slice(0, 20000).map(function (r) { return (Array.isArray(r) ? r : [r]).slice(0, 80).map(function (c) { return ("" + (c == null ? "" : c)).slice(0, 400); }); }).filter(function (r) { return r.some(function (c) { return c.trim() !== ""; }); });
+    try { if (ev.source && ev.source.postMessage) ev.source.postMessage({ type: "btob-ack", n: rows.length }, "*"); } catch (e) { }
+    var key = rows.length + "|" + (rows[0] || []).join("|") + "|" + (d.url || "");
+    if (key === lastRecvKey || !rows.length) return;
+    lastRecvKey = key;
+    var mk = marketFromUrl(d.url);
+    if (mk) { IMP.mk = mk; document.querySelectorAll("#dmMk .mkchip").forEach(function (x) { x.classList.toggle("on", x.getAttribute("data-mk") === mk); }); }
+    IMP.rows = rows; IMP.name = B.nfkc(d.title || "ブックマークレット").slice(0, 40) + " " + todayJST() + (d.pages > 1 ? "（" + d.pages + "ページ）" : ""); IMP.an = analyzeRows(rows);
+    showView("data"); renderPreview();
+    var rb = $("dmRecv"); if (rb) rb.style.display = "none";
+    toast(rows.length + "行を受け取りました。列を確認して「取り込む」を押してください");
+    try { window.focus(); $("dmPreview").scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) { }
+  });
+  if (P.get("recv") === "1") { var rb0 = $("dmRecv"); if (rb0) rb0.style.display = "block"; }
 
   /* ================= 設定 ================= */
   var SPEC = [
@@ -628,7 +650,7 @@
     try {
       $("verLabel").textContent = V;
       fillCats(); mkHint(); renderSettings();
-      showView(lsGet("btob_tab", "spread"));
+      showView(P.get("recv") === "1" ? "data" : lsGet("btob_tab", "spread"));
     } catch (e) { log("init ui error", e.message); showEsc(); }
     openDB().then(function (d) { idb = d; }).catch(function (e) { log("idb open fail", e.message); idbFailed = true; })
       .then(loadAll).catch(function (e) { log("loadAll fail", e.message); })

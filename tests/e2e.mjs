@@ -186,6 +186,38 @@ async function fresh(viewport) {
   await ctx.close();
 }
 
+// ---------- ブックマークレット：会員サイト風ページ → ナビへワンクリック送信（2ページ分） ----------
+{
+  const { ctx, page, errors } = await fresh({ width: 1200, height: 900 });
+  await page.goto(URL, { waitUntil: "domcontentloaded" });
+  await page.waitForSelector("#loader", { state: "hidden", timeout: 20000 });
+  await page.waitForFunction(() => (document.querySelector("#dmBookmarklet").getAttribute("href") || "").startsWith("javascript:"), null, { timeout: 15000 });
+  const href = await page.$eval("#dmBookmarklet", a => a.getAttribute("href"));
+  const code = decodeURIComponent(href.slice("javascript:".length));
+  ok(code.indexOf(URL) >= 0 && code.indexOf("__TOOL__") < 0, "ブックマークレットにナビのURLが埋まる", code.slice(0, 80));
+  await page.close();
+  const fx = await ctx.newPage();
+  fx.on("dialog", d => d.dismiss());
+  await fx.goto(URL + "tests/fixtures/fake-auction.html", { waitUntil: "domcontentloaded" });
+  const [popup] = await Promise.all([ctx.waitForEvent("page", { timeout: 15000 }), fx.evaluate(code)]);
+  await popup.waitForLoadState("domcontentloaded");
+  ok(/recv=1/.test(popup.url()), "ナビが ?recv=1 で開く", popup.url());
+  await popup.waitForSelector("#dmImport", { timeout: 30000 });
+  const recvName = await popup.textContent("#dmPreview h2");
+  ok(/2ページ/.test(recvName), "2ページ分を辿って受信", recvName);
+  const recvTest = await popup.textContent("#dmTest");
+  ok(/5行が有効/.test(recvTest), "ヘッダー重複を除き5行が有効", recvTest);
+  const mkOn = await popup.$eval("#dmMk .mkchip.on", e => e.getAttribute("data-mk"));
+  ok(mkOn === "ecoauc", "市場は未判定URLなので既定のまま（エコオク）", mkOn);
+  await popup.click("#dmImport");
+  await popup.waitForFunction(() => window.__BTOB_STATE.counts().ecoauc === 5, null, { timeout: 8000 });
+  ok(true, "受信した5行を取り込めた");
+  const recs = await popup.evaluate(() => window.__BTOB_STATE.data.ecoauc.map(r => [r.brand, r.cat, r.model, r.price]));
+  ok(recs.some(r => r[0] === "CHANEL" && r[2] === "A01112" && r[3] === 180000) && recs.some(r => r[0] === "DIOR" && r[3] === 30000), "ブランド・型番・価格が正しく入る", recs);
+  ok(errors.length === 0, "コンソール/ページエラーなし（ブックマークレット）", errors);
+  await ctx.close();
+}
+
 await browser.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
