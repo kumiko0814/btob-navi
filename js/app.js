@@ -4,7 +4,7 @@
 (function () {
   "use strict";
   var B = window.BTOB;
-  var V = "20261013b";
+  var V = "20261013c";
   var $ = function (id) { return document.getElementById(id); };
   var P = new URLSearchParams(location.search);
   var DEBUG = P.get("debug") === "1";
@@ -476,11 +476,23 @@
     h += "<div class='tw'><table><thead><tr>" + Array.apply(null, Array(Math.min(ncol, 12))).map(function (_, c) { return "<th>" + esc(colName(c)) + "</th>"; }).join("") + "</tr></thead><tbody>";
     an.data.slice(0, 5).forEach(function (r) { h += "<tr>" + Array.apply(null, Array(Math.min(ncol, 12))).map(function (_, c) { return "<td>" + esc(("" + (r[c] == null ? "" : r[c])).slice(0, 24)) + "</td>"; }).join("") + "</tr>"; });
     h += "</tbody></table></div>";
-    h += "<div class='btns'><button class='btn' id='dmImport' type='button'>この内容で " + esc(B.MARKETS[IMP.mk].short) + " に取り込む</button><span class='hint' id='dmTest' style='margin:0'></span></div></div>";
+    h += "<div class='btns'><button class='btn' id='dmImport' type='button'>この内容で " + esc(B.MARKETS[IMP.mk].short) + " に取り込む</button><button class='btn lav' id='dmToSpread' type='button'>このリストを仕入れ判定にかける</button><span class='hint' id='dmTest' style='margin:0'></span></div>";
+    h += "<p class='hint'>落札結果・相場検索なら「取り込む」、今週の出品一覧なら「仕入れ判定にかける」を押してください。</p></div>";
     box.innerHTML = h;
     box.querySelectorAll("select[data-role]").forEach(function (sel) { sel.onchange = function () { var v = sel.value; if (v === "") delete an.map[sel.getAttribute("data-role")]; else an.map[sel.getAttribute("data-role")] = +v; testMap(); }; });
     $("dmImport").onclick = doImport;
+    $("dmToSpread").onclick = toSpread;
     testMap();
+  }
+  // 受け取った一覧を「仕入れ判定」へそのまま渡す（出品一覧・下見リスト用）
+  function toSpread() {
+    var an = IMP.an; if (!an) return;
+    var rows = an.head ? [an.head].concat(an.data) : an.data;
+    $("spList").value = B.toTSV(rows);
+    if (IMP.mk && IMP.mk !== $("sellMk").value && B.MARKETS[IMP.mk].roles.indexOf("buy") >= 0) { $("buyMk").value = IMP.mk; mkHint(); }
+    IMP.rows = []; IMP.an = null; $("dmPreview").innerHTML = ""; $("dmText").value = "";
+    showView("spread"); window.scrollTo(0, 0);
+    runSpread();
   }
   function testMap() {
     var an = IMP.an; if (!an) return;
@@ -650,7 +662,9 @@
     try {
       $("verLabel").textContent = V;
       fillCats(); mkHint(); renderSettings();
-      showView(P.get("recv") === "1" ? "data" : lsGet("btob_tab", "spread"));
+      var tabParam = P.get("tab"); if (tabParam && !$("v-" + tabParam)) tabParam = null;
+      showView(P.get("recv") === "1" ? "data" : (tabParam || lsGet("btob_tab", "spread")));
+      document.addEventListener("click", function (e) { var a = e.target.closest("[data-go]"); if (a) { e.preventDefault(); showView(a.getAttribute("data-go")); window.scrollTo(0, 0); } });
     } catch (e) { log("init ui error", e.message); showEsc(); }
     openDB().then(function (d) { idb = d; }).catch(function (e) { log("idb open fail", e.message); idbFailed = true; })
       .then(loadAll).catch(function (e) { log("loadAll fail", e.message); })

@@ -218,6 +218,36 @@ async function fresh(viewport) {
   await ctx.close();
 }
 
+// ---------- ガイドと「仕入れ判定にかける」 ----------
+{
+  const { ctx, page, errors } = await fresh({ width: 1000, height: 900 });
+  await page.goto(URL + "?tab=help", { waitUntil: "domcontentloaded" });
+  await page.waitForSelector("#loader", { state: "hidden", timeout: 20000 });
+  ok(await page.$eval("#v-help", e => e.classList.contains("on")), "?tab=help でガイドが開く");
+  const helpTxt = await page.textContent("#v-help");
+  ok(/はじめての方へ/.test(helpTxt) && /毎週の流れ/.test(helpTxt) && /よくあるつまずき/.test(helpTxt) && /用語/.test(helpTxt), "ガイドの章がそろっている");
+  await page.evaluate(() => document.querySelectorAll("#v-help img").forEach(i => { i.loading = "eager"; i.src = i.src; }));
+  await page.waitForFunction(() => [...document.querySelectorAll("#v-help img")].every(i => i.complete), null, { timeout: 30000 });
+  const imgs = await page.$$eval("#v-help img", els => els.map(i => ({ src: i.getAttribute("src"), w: i.naturalWidth })));
+  ok(imgs.length >= 6 && imgs.every(i => i.w > 0), "ガイドの画像が全て表示される", imgs);
+  await page.click('.tab[data-v="spread"]');
+  await page.click('[data-go="help"]');
+  ok(await page.$eval("#v-help", e => e.classList.contains("on")), "「はじめての方はこちら」でガイドへ移動");
+  // 受け取った一覧を仕入れ判定にかける
+  await page.click('.tab[data-v="data"]');
+  await page.waitForFunction(() => window.__BTOB_STATE && window.__BTOB_STATE.counts().aucnet > 3000, null, { timeout: 40000 });
+  await page.fill("#dmText", "ブランド名\t商品名\tランク\tスタート価格\nシャネル\tマトラッセ チェーンショルダー\tB\t60000\nエルメス\tカレ90 スカーフ\tA\t8000\nグッチ\tGGマーモント 長財布\tC\t4000\nアニアリ\tレザー トート\tB\t2000");
+  await page.click("#dmParse"); await page.waitForSelector("#dmToSpread");
+  await page.click("#dmToSpread");
+  await page.waitForSelector("#spTable tbody tr");
+  ok(await page.$eval("#v-spread", e => e.classList.contains("on")), "仕入れ判定タブに切り替わる");
+  const n = await page.evaluate(() => window.__BTOB_STATE.results().length);
+  ok(n === 4, "4点が判定される", n);
+  ok((await page.$eval("#buyMk", e => e.value)) === "ecoauc", "買う市場は受信元（エコオク）のまま");
+  ok(errors.length === 0, "コンソール/ページエラーなし（ガイド）", errors);
+  await ctx.close();
+}
+
 await browser.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

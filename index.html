@@ -103,7 +103,7 @@ textarea.big{min-height:120px; resize:vertical; font-size:12.5px; font-family:ui
 .tile{border:1px solid var(--line); border-radius:14px; padding:10px 12px; background:#fff;}
 .tile .l{font-size:10px; color:var(--sub); font-weight:700;}
 .tile .v{font-size:19px; color:var(--plum2); font-weight:800; line-height:1.3; word-break:break-all;}
-.tile .v small{font-size:10.5px; color:var(--sub); font-weight:700;}
+.tile .v small{font-size:10.5px; color:var(--sub); font-weight:700; white-space:nowrap;}
 .tile.hi{background:linear-gradient(135deg,#fff5f9,#f6f0fb);}
 
 /* ===== tables ===== */
@@ -161,6 +161,14 @@ td input.bid:focus{outline:none; border-color:var(--pink);}
 .note{border-left:4px solid var(--pink); background:#fff8fb; border-radius:0 12px 12px 0; padding:10px 14px; font-size:12.5px; margin-top:10px;}
 a{color:var(--pinkd);}
 
+/* ===== guide ===== */
+.guide img{display:block; width:100%; border:1px solid var(--line); border-radius:14px; margin:10px 0 4px; box-shadow:var(--shadow);}
+.guide .qa p{font-size:13px; padding:10px 0; border-top:1px dashed var(--line); line-height:1.9;}
+.guide .qa p:first-child{border-top:none;}
+.guide .tile .v{line-height:1.6;}
+details.card summary::-webkit-details-marker{color:var(--pinkd);}
+.hero .chips a{color:var(--pinkd); text-decoration:none; font-weight:800;}
+
 /* ===== footer / toast / bug / debug ===== */
 footer{text-align:center; padding:34px 10px 10px; font-size:10.5px; color:var(--sub);}
 footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6px;}
@@ -203,11 +211,11 @@ footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6p
     <!-- ================= 仕入れ判定 ================= -->
     <section class="view on" id="v-spread">
       <div class="hero">
-        <div class="ava"><img src="img/kumiko-head-avatar.png?v=20261013b" alt=""></div>
+        <div class="ava"><img src="img/kumiko-head-avatar.png?v=20261013c" alt=""></div>
         <div class="msg">
           <div class="name">仕入れ判定<i>市場またぎ</i></div>
           <p id="heroMsg">こんにちは☺️ エコオクの出品リストを貼ると、「オークネットならいくらで売れそうか」「いくらまで入札してOKか」を1点ずつ出します。価格差で仕入れを決める時に使ってください。</p>
-          <div class="chips"><i>税抜で計算</i><i>手数料・送料込み</i><i>データは端末内だけに保存</i></div>
+          <div class="chips"><i>税抜で計算</i><i>手数料・送料込み</i><i>データは端末内だけに保存</i><i><a href="?tab=help" data-go="help">はじめての方はこちら →</a></i></div>
         </div>
       </div>
 
@@ -260,7 +268,7 @@ footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6p
     <!-- ================= 出口判定 ================= -->
     <section class="view" id="v-exit">
       <div class="hero">
-        <div class="ava"><img src="img/kumiko-head-avatar.png?v=20261013b" alt=""></div>
+        <div class="ava"><img src="img/kumiko-head-avatar.png?v=20261013c" alt=""></div>
         <div class="msg">
           <div class="name">出口判定<i>Re:che 仕入れ品</i></div>
           <p>Re:cheで仕入れた在庫を「業者オークション（オークネット）に流したらいくら残るか」と「メルカリで売ったらいくら残るか」を並べます。在庫管理表の行をそのまま貼れます（商品名／状態／仕入単価／予想売価）。</p>
@@ -339,36 +347,121 @@ footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6p
     </section>
 
     <!-- ================= 使い方 ================= -->
-    <section class="view" id="v-help">
-      <div class="card">
-        <h2><span class="tag">流れ</span>このツールの使い方</h2>
-        <ol class="steps">
-          <li><b>相場データを入れる</b>：「相場データ」タブで、売り先の落札履歴を取り込む（オークネットは初期データとして2025-12の卸リスト4,278点を換算済みで同梱）。</li>
-          <li><b>仕入れ判定</b>：エコオクの出品一覧を貼る → 1点ずつ「販売相場・手残り・上限入札額・判定」が出る → 入札額を打ち直して粗利を確認 → 「入札シート形式でコピー」で入札シートへ。</li>
-          <li><b>出口判定</b>：Re:che在庫を貼る → 業者オクに流した手残りとメルカリの手残りを比較 → 即換金か粘るかを決める。</li>
-        </ol>
+        <section class="view" id="v-help">
+      <div class="hero">
+        <div class="ava"><img src="img/kumiko-head-avatar.png?v=20261013c" alt=""></div>
+        <div class="msg">
+          <div class="name">はじめての方へ<i>使い方ガイド</i></div>
+          <p>このナビは「どの商品を、いくらまでなら仕入れてよいか」と「仕入れた商品をどこで売ると手残りが多いか」を数字で出す道具です。難しい操作はありません。上から順に、1回だけの準備と、毎週の流れを説明します。</p>
+          <div class="chips"><i>PCのChrome推奨</i><i>読む時間 約5分</i><i>困ったら左下の「不具合を報告」</i></div>
+        </div>
       </div>
-      <div class="card">
-        <h2><span class="tag">エコオク</span>落札履歴の取り方</h2>
-        <ol class="steps">
-          <li>会員サイト（ecoauc.com/client）にログイン → 過去開催の「落札結果／売買履歴」を開く（過去30回分が無料で見られます）。</li>
-          <li>ブランド・カテゴリで絞り込み → ブックマーク「📥 BtoBナビへ送る」を押す（または一覧の表を選択してコピー）。</li>
-          <li>「相場データ」タブで市場＝エコオクを選び、貼り付け → 列を確認 → 取り込む。列は「ブランド名／商品名／ランク／型番／落札価格」があれば十分です。</li>
-        </ol>
-        <p class="hint">エコオクのランクは N・S・A・AB・B・BC・C・D・F の9段階。落札額には消費税10%が別途、落札手数料は 1万円以下500円／5万円未満1,000円／5万円以上2,000円（税別）、送料は翌月請求（利用規約・請求書より）。</p>
+
+      <div class="card guide">
+        <h2><span class="tag">全体像</span>このナビでできる3つのこと</h2>
+        <div class="tiles">
+          <div class="tile hi"><div class="l">① 仕入れ判定</div><div class="v" style="font-size:14px">エコオクの出品一覧を入れると、1点ずつ「オークネットでいくらで売れそうか」「いくらまで入札してよいか」「◎○△×」が出ます</div></div>
+          <div class="tile"><div class="l">② 出口判定</div><div class="v" style="font-size:14px">Re:cheの在庫を入れると、「業者オークションに流した手残り」と「メルカリの手残り」を比べて、どちらで売るかを提案します</div></div>
+          <div class="tile"><div class="l">③ 相場データ</div><div class="v" style="font-size:14px">落札結果を取り込むほど判定が正確になります。データはこのPCの中だけに保存されます</div></div>
+        </div>
+        <div class="note">金額はすべて<b>税抜</b>です。手数料と送料は引いたあとの数字が出ます（計算の中身はページの一番下）。</div>
       </div>
-      <div class="card">
-        <h2><span class="tag">オークネット</span>相場の取り方</h2>
+
+      <div class="card guide">
+        <h2><span class="tag">準備（1回だけ）</span>ブックマークを登録する<small>PCのChromeで</small></h2>
         <ol class="steps">
-          <li>会員サイト（member.brand-auc.com）にログイン → 「相場検索」（過去1年・約40万点）でブランド・形状を検索。</li>
-          <li>結果一覧をコピー、またはCSV出力（auctionItems_…csv：メーカー／ジャンル／形状／型番／商品名／評価／外装評価／内装評価／価格 の列をそのまま読めます）。</li>
-          <li>「相場データ」タブで市場＝オークネット → 取り込む。卸リスト（卸価格）を入れる時は「卸価格→÷1.10で落札相場に換算」にチェック。</li>
+          <li>上の「相場データ」タブを開き、「会員サイトから直接送る」の中にある <b>📥 BtoBナビへ送る</b> というリンクを探します。</li>
+          <li>そのリンクを、Chromeの<b>ブックマークバーへドラッグ</b>します（ブックマークバーが出ていない時は Chromeの「表示」→「ブックマークバーを常に表示」）。</li>
+          <li>ブックマークバーに「📥 BtoBナビへ送る」が並べば完了です。クリックしても何も起きないのは正常です。会員サイトの画面で押すと動きます。</li>
         </ol>
-        <p class="hint">評価は S（新品）／A（保存状態良）／B（中古・綺麗）／C（中古）／D（リペア必要）＋内装・外装（1＝ダメージ小、2＝大、＋は良い）。少しでも傷があるとCになる厳しめ基準なので、初期設定では「オークネットのランク＋1段」で他市場と揃えています。落札料は4%（最低500円）、成約料は3%（プレミアム）。金額はすべて税抜表示です。</p>
+        <img src="img/guide/g0-bookmarklet.jpg?v=20261013c" alt="相場データタブの「会員サイトから直接送る」カード" loading="lazy">
       </div>
-      <div class="card">
-        <h2><span class="tag">計算式</span>判定の中身</h2>
-        <div class="formula">販売相場      ＝ 売り先データから「型番一致 ＞ ブランド×品目×同ランク ＞ ブランド×品目（ランク補正） ＞ ブランド×大分類」の順で探し、中央値を採用（上下5%トリム、帯＝25〜75%）
+
+      <div class="card guide">
+        <h2><span class="tag">毎週の流れ ①</span>出品一覧を送って、仕入れ判定する</h2>
+        <ol class="steps">
+          <li>エコオクの会員サイトに、いつものIDでログインし、今週の<b>出品一覧（下見リスト）</b>を開きます。ブランドやカテゴリで絞り込んでおくと、あとが楽です。</li>
+          <li>ブックマークバーの <b>📥 BtoBナビへ送る</b> を押します。一覧が読み取られ、「次へ」のページがあれば自動で続きも読みます（最大20ページ）。</li>
+          <li>ナビの画面が自動で開き、読み取った表が出ます。列の見出し（ブランド／商品名／ランク／価格）が合っているか確認します。ずれていたら、それぞれの選択肢で正しい列を選びます。</li>
+          <li><b>「このリストを仕入れ判定にかける」</b>を押します。判定の表に切り替わります。</li>
+        </ol>
+        <img src="img/guide/g1-recv.jpg?v=20261013c" alt="受け取った表のプレビューと列の確認" loading="lazy">
+        <p class="hint">ブックマークが使えない時は、一覧の表をマウスで選択してコピーし、「仕入れ判定」タブの枠に貼り付けて「判定する」でも同じ結果になります。CSVやExcelがある場合は「CSV / Excel を選ぶ」から読めます。</p>
+      </div>
+
+      <div class="card guide">
+        <h2><span class="tag">毎週の流れ ②</span>判定の表の見方と、入札額の決め方</h2>
+        <img src="img/guide/g2-spread.jpg?v=20261013c" alt="仕入れ判定の結果表" loading="lazy">
+        <div class="tw"><table style="min-width:520px">
+          <thead><tr><th>列</th><th>意味</th><th>見るポイント</th></tr></thead>
+          <tbody>
+            <tr><td><b>販売相場</b></td><td>オークネットで同じブランド×品目が、実際にいくらで落札されているか（真ん中の値）。帯は「だいたいこの範囲」</td><td>横の<span class="conf h">高</span><span class="conf m">中</span><span class="conf l">低</span>は信頼度。「低」は参考程度に</td></tr>
+            <tr><td><b>手残り</b></td><td>相場で売れた時に、オークネットの手数料と送料を引いて手元に残る金額</td><td>これが「売上の上限」の目安</td></tr>
+            <tr><td><b>上限入札額</b></td><td>この金額までの入札なら、手数料・送料を払っても利益率30%が残る、という上限</td><td><b>基本はこの金額を超えない</b>。迷ったら「帯下限なら」の金額に寄せる</td></tr>
+            <tr><td><b>入札額</b></td><td>自分が入れる予定の金額。最初はスタート価格が入っています</td><td>ここを打ち直すと、右の粗利と判定がすぐ変わります</td></tr>
+            <tr><td><b>粗利 / ROI</b></td><td>手残り − 仕入総額（入札額＋手数料＋送料）。ROIは仕入総額に対する利益の割合</td><td>粗利の金額で見ると判断しやすいです</td></tr>
+            <tr><td><b>判定</b></td><td><span class="j best" style="height:26px;min-width:26px;font-size:13px">◎</span> 買い（利益率30%以上かつ粗利5,000円以上）<br><span class="j good" style="height:26px;min-width:26px;font-size:13px">○</span> 条件次第（利益率15%以上）<br><span class="j thin" style="height:26px;min-width:26px;font-size:13px">△</span> 薄利　<span class="j bad" style="height:26px;min-width:26px;font-size:13px">×</span> 赤字　<span class="j na" style="height:26px;min-width:26px;font-size:13px">—</span> 相場なし</td><td>◎と○を中心に入札。「—」は相場のデータが無いので、数字を出していません</td></tr>
+          </tbody>
+        </table></div>
+        <ol class="steps" style="margin-top:12px">
+          <li>並び順を「判定が良い順」にして、◎から順に見ます。</li>
+          <li>気になる商品の「入札額」を打ち直して、粗利がいくら残るかを確認します（上限入札額を超えると判定が下がります）。</li>
+          <li>決まったら <b>「入札シート形式でコピー」</b> を押します。オークネット入札シートと同じ列順でコピーされるので、スプレッドシートの新しい行に貼り付けるだけです。備考欄に相場と判定が入ります。</li>
+        </ol>
+        <img src="img/guide/g3-actions.jpg?v=20261013c" alt="集計タイルと「入札シート形式でコピー」ボタン" loading="lazy">
+      </div>
+
+      <div class="card guide">
+        <h2><span class="tag">毎週の流れ ③</span>落札結果を相場データに足す<small>やるほど判定が正確に</small></h2>
+        <ol class="steps">
+          <li>オークション終了後、エコオクやオークネットの会員サイトで<b>落札結果（相場検索）</b>の一覧を開きます。</li>
+          <li>ブックマークバーの <b>📥 BtoBナビへ送る</b> を押し、ナビの画面で列を確認します。</li>
+          <li>市場（エコオク／オークネット）が正しく選ばれているか見て、<b>「この内容で◯◯に取り込む」</b>を押します。同じ商品が二重に入ることはありません。</li>
+        </ol>
+        <p class="hint">オークネットのCSV（auctionItems_…csv）は、そのまま「CSV / Excel を選ぶ」で読めます。卸リスト（卸価格）を入れる時は「卸価格→割り戻して取り込む」にチェックが入っていることを確認してください。</p>
+      </div>
+
+      <div class="card guide">
+        <h2><span class="tag">出口判定</span>Re:cheの在庫を、どこで売るか決める</h2>
+        <ol class="steps">
+          <li>在庫管理表（スプレッドシート）で、見たい商品の行を見出し行ごと選択してコピーします。必要な列は「商品名」「状態」「仕入単価」「予想売価」です。</li>
+          <li>「出口判定（Re:che）」タブの枠に貼り付けて、<b>「出口を判定する」</b>を押します。</li>
+          <li>右端の「おすすめ」を見ます。<b>即</b>＝業者オークションで今すぐ換金してよい／<b>粘</b>＝まずメルカリで売り、残ったら業者オクへ／<b>×</b>＝業者オクだと赤字。</li>
+        </ol>
+        <img src="img/guide/g4-exit.jpg?v=20261013c" alt="出口判定の結果表" loading="lazy">
+        <p class="hint">「推定」と付いている金額は、業者オクの実データが無いため、メルカリ相場から換算した目安です。実データを取り込むと置き換わります。</p>
+      </div>
+
+      <div class="card guide">
+        <h2><span class="tag">困った時</span>よくあるつまずき</h2>
+        <div class="qa">
+          <p><b>Q. ブックマークを押しても何も起きない</b><br>A. 会員サイトの「一覧が表示されているページ」で押してください。ログイン画面や商品1点の詳細ページでは動きません。ポップアップがブロックされた表示が出たら「許可」を選び、もう一度押します。</p>
+          <p><b>Q. 列がずれている（商品名の所に価格が出ている など）</b><br>A. プレビューの上にある選択肢で、正しい列を選び直せます。価格の列だけは必ず選んでください。</p>
+          <p><b>Q. 判定が「—（相場なし）」ばかり</b><br>A. そのブランド×品目の落札データがまだ入っていません。会員サイトでそのブランドの落札結果を検索して取り込むと出るようになります。当てずっぽうの数字は出さない仕様です。</p>
+          <p><b>Q. ブランド名が「不明」になる</b><br>A. 商品名にブランド名が入っていないか、まだ辞書に無いブランドです。商品名の先頭にブランド名を足して貼り直すと拾えます。辞書への追加は「不具合を報告」から送ってください。</p>
+          <p><b>Q. 別のPCで開いたらデータが無い</b><br>A. 相場データはPCごとに保存されています。「相場データ」タブの「全データをJSONで書き出す」で保存し、別のPCで「JSONを読み込む」と移せます。月に1回のバックアップもおすすめです。</p>
+          <p><b>Q. 手数料や送料が実際と違う</b><br>A. 「手数料・設定」タブで数字を直して「保存する」を押すと、判定全体に反映されます。「仮」と書いてある項目は請求書の実績に合わせて直してください。</p>
+          <p><b>Q. 画面がおかしい・動かない</b><br>A. ページを再読み込みしてください。それでも直らない時は、左下の「不具合を報告」から状況を送ってください（担当が確認して直します）。</p>
+        </div>
+      </div>
+
+      <div class="card guide">
+        <h2><span class="tag">用語</span>言葉の意味</h2>
+        <div class="tw"><table style="min-width:480px">
+          <tbody>
+            <tr><td><b>手残り</b></td><td>売れた金額から、売る側の手数料と送料を引いた、手元に残るお金</td></tr>
+            <tr><td><b>仕入総額</b></td><td>落札額に、買う側の手数料と入荷の送料を足した、実際に払うお金（税抜）</td></tr>
+            <tr><td><b>ROI</b></td><td>粗利 ÷ 仕入総額。30%なら「払ったお金の3割が利益」</td></tr>
+            <tr><td><b>ランク補正</b></td><td>相場の商品と、この商品の状態ランクの差を価格に反映すること。1段で約10%</td></tr>
+            <tr><td><b>帯</b></td><td>落札価格のばらつき。この範囲に入ることが多い、という目安（25〜75%）</td></tr>
+            <tr><td><b>信頼</b></td><td>相場の根拠の強さ。型番が一致＝高、同じランクが複数＝高〜中、品目だけ＝中〜低</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <details class="card guide">
+        <summary style="cursor:pointer;font-weight:800;color:var(--plum2)">計算式と各サイトの手数料（詳しく知りたい方向け）</summary>
+        <div class="formula" style="margin-top:12px">販売相場      ＝ 売り先データから「型番一致 ＞ ブランド×品目×同ランク ＞ ブランド×品目（ランク補正） ＞ ブランド×大分類」の順で探し、中央値を採用（上下5%トリム、帯＝25〜75%）
 ランク補正    ＝ 1段につき ×1.10（例：相場がBでこの品がAなら ×1.10、Cなら ÷1.10）。実データの最高・最安の範囲内に収める
 手残り        ＝ 販売相場 − 売り手数料 − 出荷送料
 仕入れ総額    ＝ 入札額 ＋ 買い手数料 ＋ 入荷送料（税抜）
@@ -376,18 +469,16 @@ footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6p
 上限入札額    ＝ ROIが目標（初期値30%）になる入札額（100円単位に切り下げ）
 判定          ◎ ROI≧30% かつ 粗利≧5,000円 ／ ○ ROI≧15% かつ 粗利≧3,000円 ／ △ 粗利プラス ／ × 赤字
 出口判定      業者オクの手残りがメルカリ手残りの70%以上なら「即換金」を提案（回転優先）。業者オクの実データが無い時はメルカリ相場×係数（HERMES/CHANEL/LV 0.80・GUCCI/PRADA等 0.60・他 0.45）で推定し「推定」と明示</div>
-        <div class="note">相場が無いブランド×品目は数字を出しません（当てずっぽうの数字は事故のもと）。その場合は売り先の会員サイトで該当ブランドを検索して取り込んでください。ランク違い・付属品・年代で実際の落札額は上下します。判定は入札の目安であり、最終判断は現物と写真の確認で。</div>
-      </div>
-      <div class="card">
-        <h2><span class="tag">データの扱い</span>保存場所と注意</h2>
-        <p class="hint">取り込んだ相場データはこの端末のブラウザ（IndexedDB）だけに保存され、どこにも送信されません。別の端末でも使いたい時は「相場データ」タブのJSON書き出し→読み込みで移せます。ブラウザのデータ消去をすると消えるので、取り込み後はバックアップをおすすめします。各会員サイトの利用規約により、データは自社の仕入れ判断にのみ使ってください。</p>
-        <p class="hint">バージョン <span id="verLabel"></span>。不具合は左下の「不具合を報告」から送れます。</p>
-      </div>
+        <p class="hint" style="margin-top:10px">エコオク：ランクは N・S・A・AB・B・BC・C・D・F の9段階。落札額には消費税10%が別途、落札手数料は 1万円以下500円／5万円未満1,000円／5万円以上2,000円（税別）、送料は翌月請求。</p>
+        <p class="hint">オークネット：評価は S（新品）／A（保存状態良）／B（中古・綺麗）／C（中古）／D（リペア必要）＋内装・外装（1＝ダメージ小、2＝大、＋は良い）。少しでも傷があるとCになる厳しめ基準なので、初期設定では「オークネットのランク＋1段」で他市場と揃えています。落札料は4%（最低500円）、成約料は3%（プレミアム）。金額はすべて税抜表示。</p>
+        <p class="hint">データの扱い：取り込んだ相場データはこの端末のブラウザ（IndexedDB）だけに保存され、どこにも送信されません。各会員サイトの利用規約により、データは自社の仕入れ判断にのみ使ってください。バージョン <span id="verLabel"></span>。</p>
+      </details>
     </section>
+
   </main>
 
   <footer>
-    <img src="img/kumiko-pink-peace.png?v=20261013b" alt="">
+    <img src="img/kumiko-pink-peace.png?v=20261013c" alt="">
     <p>Merone 社内ツール ／ BtoB 仕入れ判定ナビ</p>
   </footer>
 </div>
@@ -401,7 +492,7 @@ footer img{height:84px; width:auto; opacity:.95; display:block; margin:0 auto 6p
 </div></div>
 <div id="toast"></div>
 
-<script src="js/engine.js?v=20261013b"></script>
-<script src="js/app.js?v=20261013b"></script>
+<script src="js/engine.js?v=20261013c"></script>
+<script src="js/app.js?v=20261013c"></script>
 </body>
 </html>
