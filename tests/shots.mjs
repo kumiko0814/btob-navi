@@ -15,7 +15,8 @@ await page.goto(URL, { waitUntil: "domcontentloaded" });
 await page.waitForSelector("#loader", { state: "hidden", timeout: 20000 });
 await page.waitForFunction(() => window.__BTOB_STATE && window.__BTOB_STATE.counts().aucnet > 3000, null, { timeout: 40000 });
 // スクショ中はタブ帯を固定しない（カードの上に被らないように）
-const UNSTICK = ".tabs{position:static !important} #bugL{display:none !important}";
+const UNSTICK = ".tabs{position:static !important} #bugL,#toast{display:none !important} .app{max-width:1360px !important}";
+await page.setViewportSize({ width: 1400, height: 900 });
 await page.addStyleTag({ content: UNSTICK });
 
 // g0: ブックマークレットのカード
